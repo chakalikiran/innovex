@@ -1,0 +1,6 @@
+{
+  "name": "ClearPass — Digital Clearance Platform",
+  "description": "Automated university No-Dues clearance platform for students and departments with real-time tracking and digital certificates.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

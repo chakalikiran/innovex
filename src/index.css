@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-page: #F6F4ED;
+    --bg-surface: #FFFFFF;
+    --bg-subtle: #EDEAE1;
+    --border-color: #E2DDD3;
+    --border-subtle: #E8E5DC;
+    --text-primary: #0F172A;
+    --text-secondary: #5A6A80;
+    --text-muted: #8E9BAE;
+    --accent-primary: #0F172A;
+    --accent-hover: #1E293B;
+    --accent-light: #F1F5F9;
+    --status-approved: #16A34A;
+    --status-approved-bg: #F0FDF4;
+    --status-approved-border: #BBF7D0;
+    --status-pending: #F59E0B;
+    --status-pending-bg: #FFFBEB;
+    --status-pending-border: #FDE68A;
+    --status-rejected: #DC2626;
+    --status-rejected-bg: #FEF2F2;
+    --status-rejected-border: #FECACA;
+  }
+
+  .dark {
+    --bg-page: #121518;
+    --bg-surface: #1B2026;
+    --bg-subtle: #242B33;
+    --border-color: #2F3742;
+    --border-subtle: #242B33;
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
+    --accent-primary: #F8FAFC;
+    --accent-hover: #E2E8F0;
+    --accent-light: #242B33;
+    --status-approved: #34D399;
+    --status-approved-bg: #064E3B26;
+    --status-approved-border: #065F46;
+    --status-pending: #FBBF24;
+    --status-pending-bg: #78350F26;
+    --status-pending-border: #92400E;
+    --status-rejected: #F87171;
+    --status-rejected-bg: #7F1D1D26;
+    --status-rejected-border: #991B1B;
+  }
+
+  body {
+    background-color: var(--bg-page);
+    color: var(--text-primary);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .font-editorial, .serif {
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+
+  .font-sans-ui {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  .font-mono-code, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+}
+

@@ -1,0 +1,98 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function hasUserDoc() {
+      return isSignedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+    
+    function getUserData() {
+      return hasUserDoc() ? get(/databases/$(database)/documents/users/$(request.auth.uid)).data : null;
+    }
+
+    function getUserRole() {
+      return hasUserDoc() ? getUserData().role : null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (getUserRole() == 'admin' || request.auth.token.email == 'chakalikiran23@gmail.com' || request.auth.token.email == 'antig6072@gmail.com');
+    }
+
+    function isAuthorityOfficer() {
+      return isSignedIn() && (
+        isAdmin() ||
+        getUserRole() in [
+          'library_officer',
+          'hostel_officer',
+          'sports_officer',
+          'accounts_officer'
+        ]
+      );
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Test connection doc
+    match /test/connection {
+      allow read: if true;
+    }
+
+    // User accounts and role records
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.auth.uid == userId;
+      allow update: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    // Student directory records
+    match /students/{studentId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn() && (request.auth.uid == studentId || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    // Employee ID to email lookup index (needed for Authority Employee ID login)
+    match /employee_index/{employeeId} {
+      allow read: if true;
+      allow create, update: if isSignedIn();
+      allow delete: if isAdmin();
+    }
+
+    // Public certificate verification and registry
+    match /certificates/{certificateId} {
+      allow read: if true; // Public verification for employers and universities
+      allow create, update: if isSignedIn();
+      allow delete: if false; // Official academic credentials cannot be deleted
+    }
+
+    // Clearance Requests
+    match /clearance_requests/{requestId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update: if isSignedIn();
+      allow delete: if false; // Audit safety: requests cannot be deleted
+    }
+
+    // Department Audit Trail
+    match /audit_logs/{auditId} {
+      allow read: if isSignedIn() && isAuthorityOfficer();
+      allow create: if isSignedIn();
+      allow update, delete: if false; // Immutable audit trail
+    }
+
+    // Notifications
+    match /notifications/{notificationId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn();
+      allow delete: if false;
+    }
+  }
+}
